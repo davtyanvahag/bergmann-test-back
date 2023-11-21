@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  bergmann-test-back:
+    build:
+      context: ./bergmann-test-back
+      dockerfile: Dockerfile
+      target: development
+
+    volumes:
+      - ./bergmann-test-back:/usr/src/api
+      - /usr/src/api/node_modules
+
+    command: npm run start:dev
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      API_URL: https://jsonplaceholder.typicode.com/
+    ports:
+      - 3000:3000
+      - 9229:9229
+
+  bergmann-test-front:
+    build:
+      context: ../bergmann-test-front
+      dockerfile: Dockerfile
+      target: development
+
+    volumes:
+      - ./bergmann-test-front:/usr/front/src/api
+      - /usr/front/src/api/node_modules
+
+    command: npm run start
+    environment:
+      NODE_ENV: development
+      PORT: 4200
+      API_URL: https://jsonplaceholder.typicode.com/
+    ports:
+      - 4200:4200
+    links:
+      - bergmann-test-back
